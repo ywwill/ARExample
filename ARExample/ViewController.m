@@ -7,10 +7,13 @@
 //
 
 #import "ViewController.h"
+#import "Plane.h"
 
 @interface ViewController () <ARSCNViewDelegate>
 
 @property (nonatomic, strong) IBOutlet ARSCNView *sceneView;
+
+@property (nonatomic, strong) NSMutableDictionary *planes;
 
 @end
 
@@ -19,28 +22,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // Set the view's delegate
-    self.sceneView.delegate = self;
     
-    // Show statistics such as fps and timing information
-    self.sceneView.showsStatistics = YES;
-    
-    // Create a new scene
-    SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/ship.scn"];
-    
-    // Set the scene to the view
-    self.sceneView.scene = scene;
+    [self setupScene];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Create a session configuration
-    ARWorldTrackingConfiguration *configuration = [ARWorldTrackingConfiguration new];
-
-    // Run the view's session
-    [self.sceneView.session runWithConfiguration:configuration];
+    [self setupSession];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -48,6 +37,59 @@
     
     // Pause the view's session
     [self.sceneView.session pause];
+}
+
+- (void)setupScene{
+    // Set the view's delegate
+    self.sceneView.delegate = self;
+
+    // Show statistics such as fps and timing information
+    self.sceneView.showsStatistics = YES;
+    
+    self.planes = [NSMutableDictionary new];
+
+    SCNScene *scene = [SCNScene new];
+
+    // Set the scene to the view
+    self.sceneView.scene = scene;
+    self.sceneView.autoenablesDefaultLighting = YES;
+    self.sceneView.debugOptions = ARSCNDebugOptionShowWorldOrigin|ARSCNDebugOptionShowFeaturePoints;
+}
+
+- (void)setupSession {
+    // Create a session configuration
+    ARWorldTrackingConfiguration *configuration = [ARWorldTrackingConfiguration new];
+    
+    configuration.planeDetection = ARPlaneDetectionHorizontal;
+    
+    // Run the view's session
+    [self.sceneView.session runWithConfiguration:configuration];
+}
+
+//Called when a new node has been mapped to the given anchor
+- (void)renderer:(id<SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor{
+    if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        return;
+    }
+    
+    Plane *plane = [[Plane alloc] initWithAnchor:(ARPlaneAnchor *)anchor];
+    [self.planes setObject:plane forKey:anchor.identifier];
+    [node addChildNode:plane];
+}
+
+- (void)renderer:(id<SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor{
+    Plane *plane = [self.planes objectForKey:anchor.identifier];
+    
+    if (plane == nil) {
+        return;
+    }
+    
+    [plane update:(ARPlaneAnchor *)anchor];
+}
+
+- (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor{
+    
+    [self.planes removeObjectForKey:anchor.identifier];
 }
 
 - (void)didReceiveMemoryWarning {

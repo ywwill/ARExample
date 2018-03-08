@@ -15,6 +15,7 @@
 		443D02A920510B60009CAE69 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 443D02A720510B60009CAE69 /* LaunchScreen.storyboard */; };
 		443D02AC20510B60009CAE69 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 443D02AB20510B60009CAE69 /* main.m */; };
 		443D02B620510B61009CAE69 /* ARExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 443D02B520510B61009CAE69 /* ARExampleUITests.m */; };
+		443D02C2205118F4009CAE69 /* Plane.m in Sources */ = {isa = PBXBuildFile; fileRef = 443D02C1205118F4009CAE69 /* Plane.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,8 @@
 		443D02B120510B61009CAE69 /* ARExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		443D02B520510B61009CAE69 /* ARExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARExampleUITests.m; sourceTree = "<group>"; };
 		443D02B720510B61009CAE69 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		443D02C0205118F4009CAE69 /* Plane.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plane.h; sourceTree = "<group>"; };
+		443D02C1205118F4009CAE69 /* Plane.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Plane.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +91,8 @@
 				443D029D20510B60009CAE69 /* art.scnassets */,
 				443D029F20510B60009CAE69 /* ViewController.h */,
 				443D02A020510B60009CAE69 /* ViewController.m */,
+				443D02C0205118F4009CAE69 /* Plane.h */,
+				443D02C1205118F4009CAE69 /* Plane.m */,
 				443D02A220510B60009CAE69 /* Main.storyboard */,
 				443D02A520510B60009CAE69 /* Assets.xcassets */,
 				443D02A720510B60009CAE69 /* LaunchScreen.storyboard */,
@@ -211,6 +216,7 @@
 			files = (
 				443D02A120510B60009CAE69 /* ViewController.m in Sources */,
 				443D02AC20510B60009CAE69 /* main.m in Sources */,
+				443D02C2205118F4009CAE69 /* Plane.m in Sources */,
 				443D029C20510B60009CAE69 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,9 +371,9 @@
 				DEVELOPMENT_TEAM = 7Q3FN28VDH;
 				INFOPLIST_FILE = ARExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hades.ARExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.will.runtime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -379,9 +385,9 @@
 				DEVELOPMENT_TEAM = 7Q3FN28VDH;
 				INFOPLIST_FILE = ARExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hades.ARExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.will.runtime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
