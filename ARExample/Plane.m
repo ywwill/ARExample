@@ -10,25 +10,40 @@
 
 @implementation Plane
 
-- (instancetype)initWithAnchor:(ARPlaneAnchor *)anchor{
+- (instancetype)initWithAnchor:(ARPlaneAnchor *)anchor isHidden:(BOOL)hidden{
     self = [super init];
     
-    self.planeGeometry = [SCNPlane planeWithWidth:anchor.extent.x height:anchor.extent.z];
+    float width = anchor.extent.x;
+    float length = anchor.extent.z;
+    
+    float planeHeight = 0.01;
+    
+    self.planeGeometry = [SCNBox boxWithWidth:width height:planeHeight length:length chamferRadius:0];
     
     SCNMaterial *material = [SCNMaterial new];
     UIImage *img = [UIImage imageNamed:@"tron_grid"];
     material.diffuse.contents = img;
-    self.planeGeometry.materials = @[material];
+    
+    SCNMaterial *transparentMaterial = [SCNMaterial new];
+    transparentMaterial.diffuse.contents = [UIColor colorWithWhite:1.0 alpha:0.0];
+    
+    if (hidden) {
+        self.planeGeometry.materials = @[transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial];
+    } else {
+        self.planeGeometry.materials = @[transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial, material, transparentMaterial];
+    }
     
     SCNNode *planeNode = [SCNNode nodeWithGeometry:self.planeGeometry];
-    planeNode.position = SCNVector3Make(anchor.extent.x, 0, anchor.extent.z);
     
-    planeNode.transform = SCNMatrix4MakeRotation(-M_PI/2.0, 1.0, 0.0, 0.0);
+    planeNode.position = SCNVector3Make(0, -planeHeight / 2, 0);
+    
+    // 给平面一个物理实体，让添加到场景中的物品与它交互
+    planeNode.physicsBody = [SCNPhysicsBody
+                             bodyWithType:SCNPhysicsBodyTypeKinematic
+                             shape: [SCNPhysicsShape shapeWithGeometry:self.planeGeometry options:nil]];
     
     [self setTextureScale];
-    
     [self addChildNode:planeNode];
-    
     return self;
 }
 
@@ -37,21 +52,27 @@
     self.planeGeometry.height = anchor.extent.z;
     self.position = SCNVector3Make(anchor.center.x, 0, anchor.center.z);
     
+    SCNNode *node = [self.childNodes firstObject];
+    node.physicsBody = [SCNPhysicsBody
+                        bodyWithType:SCNPhysicsBodyTypeKinematic
+                        shape: [SCNPhysicsShape shapeWithGeometry:self.planeGeometry options:nil]];
     [self setTextureScale];
 }
 
 - (void)setTextureScale {
     CGFloat width = self.planeGeometry.width;
-    CGFloat height = self.planeGeometry.height;
+    CGFloat height = self.planeGeometry.length;
     
-    // As the width/height of the plane updates, we want our tron grid material to
-    // cover the entire plane, repeating the texture over and over. Also if the
-    // grid is less than 1 unit, we don't want to squash the texture to fit, so
-    // scaling updates the texture co-ordinates to crop the texture in that case
-    SCNMaterial *material = self.planeGeometry.materials.firstObject;
+    SCNMaterial *material = self.planeGeometry.materials[4];
     material.diffuse.contentsTransform = SCNMatrix4MakeScale(width, height, 1);
     material.diffuse.wrapS = SCNWrapModeRepeat;
     material.diffuse.wrapT = SCNWrapModeRepeat;
+}
+
+- (void)hide {
+    SCNMaterial *transparentMaterial = [SCNMaterial new];
+    transparentMaterial.diffuse.contents = [UIColor colorWithWhite:1.0 alpha:0.0];
+    self.planeGeometry.materials = @[transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial, transparentMaterial];
 }
 
 @end

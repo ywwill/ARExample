@@ -11,12 +11,14 @@
 
 @interface Plane : SCNNode
 
-- (instancetype)initWithAnchor:(ARPlaneAnchor *)anchor;
+- (instancetype)initWithAnchor:(ARPlaneAnchor *)anchor isHidden:(BOOL)hidden;
 
 - (void)update:(ARPlaneAnchor *)anchor;
 
 - (void)setTextureScale;
 
-@property (nonatomic, strong) SCNPlane *planeGeometry;
+- (void)hide;
+
+@property (nonatomic, strong) SCNBox *planeGeometry;
 
 @end
